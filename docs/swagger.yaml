@@ -1,0 +1,587 @@
+basePath: /api/v1
+definitions:
+  dto.Car:
+    properties:
+      name:
+        maxLength: 255
+        type: string
+    required:
+    - name
+    type: object
+  dto.Customer:
+    properties:
+      name:
+        maxLength: 255
+        type: string
+    required:
+    - name
+    type: object
+  dto.Schedule:
+    properties:
+      beginAt:
+        type: string
+      carId:
+        type: string
+      customerId:
+        type: string
+      endAt:
+        type: string
+    required:
+    - beginAt
+    - carId
+    - customerId
+    - endAt
+    type: object
+  dto.ScheduleUpdate:
+    properties:
+      beginAt:
+        type: string
+      endAt:
+        type: string
+    required:
+    - beginAt
+    - endAt
+    type: object
+  entities.Car:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      schedules:
+        items:
+          $ref: '#/definitions/entities.Schedule'
+        type: array
+    type: object
+  entities.Customer:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      schedules:
+        items:
+          $ref: '#/definitions/entities.Schedule'
+        type: array
+    type: object
+  entities.Schedule:
+    properties:
+      beginAt:
+        type: string
+      carId:
+        type: string
+      customerId:
+        type: string
+      endAt:
+        type: string
+      id:
+        type: string
+    type: object
+  httputils.ResponseCollection-entities_Car:
+    properties:
+      member:
+        items:
+          $ref: '#/definitions/entities.Car'
+        type: array
+      totalItems:
+        type: integer
+    type: object
+  httputils.ResponseCollection-entities_Customer:
+    properties:
+      member:
+        items:
+          $ref: '#/definitions/entities.Customer'
+        type: array
+      totalItems:
+        type: integer
+    type: object
+  httputils.ResponseCollection-entities_Schedule:
+    properties:
+      member:
+        items:
+          $ref: '#/definitions/entities.Schedule'
+        type: array
+      totalItems:
+        type: integer
+    type: object
+  httputils.ResponseError:
+    properties:
+      error:
+        example: message
+        type: string
+    type: object
+  httputils.ResponseViolations:
+    properties:
+      error:
+        example: message
+        type: string
+      violations:
+        items:
+          $ref: '#/definitions/validator.Violation'
+        type: array
+    type: object
+  validator.Violation:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+      propertyPath:
+        type: string
+    type: object
+info:
+  contact:
+    email: contact@alexandrevinet.fr
+    name: Alexandre VINET
+  description: An api to manage leasing locations.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Leasing
+  version: "1.0"
+paths:
+  /cars:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the collection of Cars resources.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/httputils.ResponseCollection-entities_Car'
+            - properties:
+                member:
+                  items:
+                    $ref: '#/definitions/entities.Car'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+      summary: Retrieves the collection of Cars resources.
+      tags:
+      - Cars
+    post:
+      consumes:
+      - application/json
+      description: Creates a Cars resource.
+      parameters:
+      - description: Car payload
+        in: body
+        name: car
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Car'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entities.Car'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputils.ResponseViolations'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+      summary: Creates a Cars resource.
+      tags:
+      - Cars
+  /cars/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Removes the Cars resource.
+      parameters:
+      - description: Cars ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+      summary: Removes the Cars resource.
+      tags:
+      - Cars
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a Cars resource.
+      parameters:
+      - description: Cars ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Car'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+      summary: Retrieves a Cars resource.
+      tags:
+      - Cars
+    put:
+      consumes:
+      - application/json
+      description: Replaces the Cars resource.
+      parameters:
+      - description: Cars ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Car payload
+        in: body
+        name: car
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Car'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Car'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputils.ResponseViolations'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+      summary: Replaces the Cars resource.
+      tags:
+      - Cars
+  /customers:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the collection of Customers resources.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/httputils.ResponseCollection-entities_Customer'
+            - properties:
+                member:
+                  items:
+                    $ref: '#/definitions/entities.Customer'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+      summary: Retrieves the collection of Customers resources.
+      tags:
+      - Customers
+    post:
+      consumes:
+      - application/json
+      description: Creates a Customers resource.
+      parameters:
+      - description: Customer payload
+        in: body
+        name: customer
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Customer'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entities.Customer'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputils.ResponseViolations'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+      summary: Creates a Customers resource.
+      tags:
+      - Customers
+  /customers/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Removes the Customers resource.
+      parameters:
+      - description: Customers ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+      summary: Removes the Customers resource.
+      tags:
+      - Customers
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a Customers resource.
+      parameters:
+      - description: Customers ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Customer'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+      summary: Retrieves a Customers resource.
+      tags:
+      - Customers
+    put:
+      consumes:
+      - application/json
+      description: Replaces the Customers resource.
+      parameters:
+      - description: Customers ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Customer payload
+        in: body
+        name: customer
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Customer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Customer'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputils.ResponseViolations'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+      summary: Replaces the Customers resource.
+      tags:
+      - Customers
+  /schedules:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the collection of Schedules resources.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/httputils.ResponseCollection-entities_Schedule'
+            - properties:
+                member:
+                  items:
+                    $ref: '#/definitions/entities.Schedule'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+      summary: Retrieves the collection of Schedules resources.
+      tags:
+      - Schedules
+    post:
+      consumes:
+      - application/json
+      description: Creates a Schedules resource.
+      parameters:
+      - description: Schedule payload
+        in: body
+        name: schedule
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Schedule'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entities.Schedule'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputils.ResponseViolations'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+      summary: Creates a Schedules resource.
+      tags:
+      - Schedules
+  /schedules/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Removes the Schedules resource.
+      parameters:
+      - description: Schedules ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+      summary: Removes the Schedules resource.
+      tags:
+      - Schedules
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a Schedules resource.
+      parameters:
+      - description: Schedules ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Schedule'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+      summary: Retrieves a Schedules resource.
+      tags:
+      - Schedules
+    put:
+      consumes:
+      - application/json
+      description: Replaces the Schedules resource.
+      parameters:
+      - description: Schedules ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Schedule payload
+        in: body
+        name: schedule
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ScheduleUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Schedule'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputils.ResponseViolations'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.ResponseError'
+      summary: Replaces the Schedules resource.
+      tags:
+      - Schedules
+swagger: "2.0"

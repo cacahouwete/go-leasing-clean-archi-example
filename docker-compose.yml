@@ -1,0 +1,26 @@
+services:
+  app:
+    build:
+      target: prod
+      context: .
+      dockerfile: docker/Dockerfile
+    networks:
+      default:
+        aliases:
+          - leasing.localhost
+
+  db:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_DB=leasing
+
+  golangci:
+    image: golangci/golangci-lint
+    working_dir: /app
+    volumes:
+      - .:/app
+    command:
+      - golangci-lint
+      - run
+      - -v

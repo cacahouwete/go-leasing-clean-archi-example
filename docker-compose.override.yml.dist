@@ -1,0 +1,29 @@
+volumes:
+  go-mode-cache: ~
+
+services:
+  app:
+    build:
+      target: dev
+      context: .
+      dockerfile: docker/Dockerfile
+    labels:
+      traefik.enable: true
+      traefik.docker.network: proxy_network
+      traefik.http.routers.leasing.rule: Host(`leasing.localhost`)
+    volumes:
+      - .:/src
+      - go-mode-cache:/go/pkg
+
+  db:
+    ports:
+      - 5432:5432
+      -
+  traefik:
+    image: traefik:latest
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./docker/traefik.yml:/etc/traefik/traefik.yml

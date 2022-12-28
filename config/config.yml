@@ -1,0 +1,13 @@
+app:
+  env: 'dev'
+  name: 'leasing'
+  version: '1.0.0'
+
+db:
+  dsn: 'postgres://postgres:@db:5432/leasing?sslmode=disable'
+
+http:
+  port: '80'
+
+logger:
+  log_level: 'info'

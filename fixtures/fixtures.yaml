@@ -1,0 +1,33 @@
+- model: Customer
+  rows:
+    - _id: cust1
+      id: cust1
+      name: Jean Dupont
+    - _id: cust2
+      id: cust2
+      name: Banana
+    - _id: cust3
+      id: cust3
+      name: Titi
+
+- model: Car
+  rows:
+    - _id: car1
+      id: car1
+      name: My Super Car
+    - _id: car2
+      id: car2
+      name: My hippest Car
+
+- model: Schedule
+  rows:
+    - id: schedule1
+      begin_at: '2022-01-02T08:00:00Z'
+      end_at: '2022-01-03T18:00:00Z'
+      car_id: "{{ $.Car.car1.ID }}"
+      customer_id: "{{ $.Customer.cust1.ID }}"
+    - id: schedule2
+      begin_at: '2022-01-06T08:00:00Z'
+      end_at: '2022-01-07T18:00:00Z'
+      car_id: "{{ $.Car.car1.ID }}"
+      customer_id: "{{ $.Customer.cust2.ID }}"

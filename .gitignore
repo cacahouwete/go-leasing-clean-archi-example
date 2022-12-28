@@ -1,0 +1,9 @@
+.project
+__debug_bin
+__tests
+coverage.out
+docker-compose.override.yml
+.env.local
+goapp
+build
+mocks
